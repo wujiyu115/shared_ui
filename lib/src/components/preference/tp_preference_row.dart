@@ -4,6 +4,10 @@ import '../../theme/tp_text_styles.dart';
 import '../../theme/tp_theme.dart';
 
 /// Horizontal preference / settings row: title (+ subtitle) left, [trailing] right.
+///
+/// Always keeps [trailing] on the same row (e.g. [Switch] stays end-aligned on
+/// mobile). Wide trailings such as [TpSegmentedPicker] / theme chips own their
+/// own horizontal scroll instead of stacking under the labels.
 class TpPreferenceRow extends StatelessWidget {
   const TpPreferenceRow({
     super.key,

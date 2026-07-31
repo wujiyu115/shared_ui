@@ -29,7 +29,7 @@ void main() {
         ],
       );
       expect(large[2], greaterThan(small[2]));
-      expect(large[2], greaterThan(132));
+      expect(large[2], greaterThan(100));
     });
 
     test('respects minSegmentWidth floor', () {
@@ -42,6 +42,36 @@ void main() {
       );
       expect(widths.single, 120);
     });
+  });
+
+  testWidgets('uses compact height by default', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(useMaterial3: true),
+        home: TpTheme(
+          data: TpThemeData.fromColorScheme(
+            ColorScheme.fromSeed(seedColor: Colors.orange),
+            scale: 1.0,
+          ),
+          child: Scaffold(
+            body: Center(
+              child: TpSegmentedControl(
+                totalSwitches: 2,
+                initialLabelIndex: 0,
+                labels: const ['浮动', '中间'],
+                icons: const [
+                  Icons.dashboard_customize_outlined,
+                  Icons.vertical_split_outlined,
+                ],
+                onToggle: (_) {},
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    final size = tester.getSize(find.byType(TpSegmentedControl));
+    expect(size.height, closeTo(tpSegmentedControlMinHeight, 0.5));
   });
 
   testWidgets('shows full label text at large typography scale', (

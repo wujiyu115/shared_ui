@@ -7,6 +7,7 @@ import 'components/tp_input_theme.dart';
 import 'components/tp_popover_theme.dart';
 import 'components/tp_select_theme.dart';
 import 'components/tp_separator_theme.dart';
+import 'components/tp_sidebar_theme.dart';
 import 'components/tp_textarea_theme.dart';
 import 'components/tp_toast_theme.dart';
 import 'tokens/tp_control_metrics.dart';
@@ -31,6 +32,7 @@ class TpThemeData {
     this.button,
     this.card,
     this.separator,
+    this.sidebar,
     this.toast,
   });
 
@@ -49,6 +51,7 @@ class TpThemeData {
     TpButtonTheme? button,
     TpCardTheme? card,
     TpSeparatorTheme? separator,
+    TpSidebarTheme? sidebar,
     TpToastTheme? toast,
   }) {
     final icons = iconScale ?? scale;
@@ -67,6 +70,7 @@ class TpThemeData {
       button: button,
       card: card,
       separator: separator,
+      sidebar: sidebar,
       toast: toast,
     );
   }
@@ -108,6 +112,9 @@ class TpThemeData {
   /// Optional separator metrics override; resolved via [separatorTheme].
   final TpSeparatorTheme? separator;
 
+  /// Optional sidebar metrics override; resolved via [sidebarTheme].
+  final TpSidebarTheme? sidebar;
+
   /// Optional toast metrics override; resolved via [toastTheme].
   final TpToastTheme? toast;
 
@@ -136,6 +143,10 @@ class TpThemeData {
   TpSeparatorTheme get separatorTheme =>
       separator ?? TpSeparatorTheme.defaults();
 
+  /// Resolved sidebar theme (defaults from [colorScheme] when [sidebar] is null).
+  TpSidebarTheme get sidebarTheme =>
+      sidebar ?? TpSidebarTheme.fromColorScheme(colorScheme);
+
   /// Resolved toast theme (defaults from [colorScheme] when [toast] is null).
   TpToastTheme get toastTheme =>
       toast ?? TpToastTheme.fromColorScheme(colorScheme);
@@ -157,6 +168,7 @@ class TpThemeData {
           buttonTheme == other.buttonTheme &&
           cardTheme == other.cardTheme &&
           separatorTheme == other.separatorTheme &&
+          sidebarTheme == other.sidebarTheme &&
           toastTheme == other.toastTheme;
 
   @override
@@ -174,6 +186,7 @@ class TpThemeData {
     buttonTheme,
     cardTheme,
     separatorTheme,
+    sidebarTheme,
     toastTheme,
   );
 }
