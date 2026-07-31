@@ -38,6 +38,7 @@ export 'src/components/select/tp_select_menu_item_button.dart';
 export 'src/components/select/tp_select_search_field.dart';
 export 'src/components/select/tp_select_with_custom_input.dart';
 export 'src/components/separator/tp_separator.dart';
+export 'src/components/step_rail/tp_step_rail.dart';
 export 'src/components/textarea/tp_textarea.dart';
 export 'src/components/textarea/tp_textarea_form_field.dart';
 export 'src/components/textarea/tp_textarea_resize_grip.dart';
