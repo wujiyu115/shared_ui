@@ -121,13 +121,11 @@ abstract final class TpToast {
             dismiss();
             action.onPressed();
           },
-          style: TextButton.styleFrom(
-            foregroundColor: accentColor,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            minimumSize: const Size(48, 32),
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            visualDensity: VisualDensity.compact,
-          ),
+          // Geometry comes from the ambient TextButtonTheme, which owns both
+          // the minimum and the maximum; a local minimum taller than the
+          // theme's height cap produced non-normalized constraints on compact
+          // control scales (min 32 > max 26 → render error).
+          style: TextButton.styleFrom(foregroundColor: accentColor),
           child: Text(
             action.label,
             style: styles.mdSemiboldColored(foregroundColor),

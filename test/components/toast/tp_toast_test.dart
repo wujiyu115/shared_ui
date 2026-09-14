@@ -6,6 +6,7 @@ Widget _harness({
   required Widget child,
   TpToastTheme? toast,
   TpToastConfig? config,
+  ButtonStyle? textButtonStyle,
 }) {
   final scheme = ColorScheme.fromSeed(seedColor: Colors.indigo);
   return TpToastWrapper(
@@ -17,7 +18,12 @@ Widget _harness({
           animationDuration: Duration(milliseconds: 200),
         ),
     child: MaterialApp(
-      theme: ThemeData(colorScheme: scheme),
+      theme: ThemeData(
+        colorScheme: scheme,
+        textButtonTheme: TextButtonThemeData(
+          style: textButtonStyle ?? const ButtonStyle(),
+        ),
+      ),
       home: TpTheme(
         data: TpThemeData.fromColorScheme(scheme, scale: 1, toast: toast),
         child: child,
@@ -98,6 +104,53 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 250));
     expect(find.text('With action'), findsOneWidget);
+
+    await tester.tap(find.text('Undo'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(pressed, isTrue);
+    expect(find.text('With action'), findsNothing);
+  });
+
+  testWidgets('action button survives a compact theme height cap', (
+    tester,
+  ) async {
+    // Mirrors the app's phone shell: the TextButtonTheme pins maximum height
+    // to the control height (26 there). The toast action button used to
+    // hard-code a minimum height of 32, and widget-style minimums merge over
+    // theme maximums — 32 <= h <= 26 is non-normalized and threw a render
+    // error the moment the undo toast appeared.
+    var pressed = false;
+    await tester.pumpWidget(
+      _harness(
+        textButtonStyle: const ButtonStyle(
+          minimumSize: WidgetStatePropertyAll(Size(64, 26)),
+          maximumSize: WidgetStatePropertyAll(Size(double.infinity, 26)),
+          padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 8)),
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+        child: Builder(
+          builder: (context) {
+            return TextButton(
+              onPressed: () => TpToast.show(
+                context,
+                message: 'With action',
+                action: TpToastAction(
+                  label: 'Undo',
+                  onPressed: () => pressed = true,
+                ),
+              ),
+              child: const Text('go'),
+            );
+          },
+        ),
+      ),
+    );
+    await tester.tap(find.text('go'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(find.text('With action'), findsOneWidget);
+    expect(tester.takeException(), isNull);
 
     await tester.tap(find.text('Undo'));
     await tester.pump();
